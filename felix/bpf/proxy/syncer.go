@@ -551,6 +551,11 @@ func (s *Syncer) applyDerived(
 		}
 	}
 
+	if sinfo.NodeLocalExternal() && local == 0 && strings.Contains(sname.Name, "-directpath") {
+		log.Debugf("LB Service %s not written due to no endpoints and directpath set", skey)
+		return nil
+	}
+
 	newInfo := svcInfo{
 		id:         svc.id,
 		count:      count,
