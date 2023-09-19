@@ -1073,14 +1073,10 @@ func checkConflictingNodes(ctx context.Context, client client.Interface, node *l
 		// This is an error condition.
 		if theirIPv4.IP != nil && ourIPv4.IP != nil && theirIPv4.IP.Equal(ourIPv4.IP) {
 			log.Warnf("Calico node '%s' is already using the IPv4 address %s.", theirNode.Name, ourIPv4.String())
-			retErr = fmt.Errorf("IPv4 address conflict")
-			v4conflict = true
 		}
 
 		if theirIPv6.IP != nil && ourIPv6.IP != nil && theirIPv6.IP.Equal(ourIPv6.IP) {
 			log.Warnf("Calico node '%s' is already using the IPv6 address %s.", theirNode.Name, ourIPv6.String())
-			retErr = fmt.Errorf("IPv6 address conflict")
-			v6conflict = true
 		}
 	}
 	return
