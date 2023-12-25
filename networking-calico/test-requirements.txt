@@ -20,3 +20,6 @@ neutron>=16,<17
 neutron-lib==2.3.0
 mock>=3.0.0 # BSD
 pyroute2<0.6.0 # Apache v2
+certifi>=2023.7.22 # not directly required, pinned by Snyk to avoid a vulnerability
+cryptography>=41.0.6 # not directly required, pinned by Snyk to avoid a vulnerability
+requests>=2.31.0 # not directly required, pinned by Snyk to avoid a vulnerability
