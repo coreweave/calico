@@ -4,7 +4,7 @@
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//     http://www.apache.org/licenses/LICENSE-2.0
+//	http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -73,10 +73,10 @@ var (
 
 // This file contains the main startup processing for the calico/node.  This
 // includes:
-// -  Detecting IP address and Network to use for BGP
-// -  Configuring the node resource with IP/AS information provided in the
-//    environment, or autodetected.
-// -  Creating default IP Pools for quick-start use
+//   - Detecting IP address and Network to use for BGP
+//   - Configuring the node resource with IP/AS information provided in the
+//     environment, or autodetected.
+//   - Creating default IP Pools for quick-start use
 func Run() {
 	// Check $CALICO_STARTUP_LOGLEVEL to capture early log statements
 	configureLogging()
@@ -861,14 +861,10 @@ func checkConflictingNodes(ctx context.Context, client client.Interface, node *a
 		// This is an error condition.
 		if theirIPv4.IP != nil && ourIPv4.IP != nil && theirIPv4.IP.Equal(ourIPv4.IP) {
 			log.Warnf("Calico node '%s' is already using the IPv4 address %s.", theirNode.Name, ourIPv4.String())
-			retErr = fmt.Errorf("IPv4 address conflict")
-			v4conflict = true
 		}
 
 		if theirIPv6.IP != nil && ourIPv6.IP != nil && theirIPv6.IP.Equal(ourIPv6.IP) {
 			log.Warnf("Calico node '%s' is already using the IPv6 address %s.", theirNode.Name, ourIPv6.String())
-			retErr = fmt.Errorf("IPv6 address conflict")
-			v6conflict = true
 		}
 	}
 	return
