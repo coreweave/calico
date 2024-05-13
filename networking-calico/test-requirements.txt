@@ -16,7 +16,7 @@ testrepository>=0.0.18 # Apache-2.0/BSD
 testscenarios>=0.4 # Apache-2.0/BSD
 testtools>=2.2.0 # MIT
 
-neutron>=16,<17
+neutron>=16,<25
 neutron-lib==2.3.0
 mock>=3.0.0 # BSD
 pyroute2<0.6.0 # Apache v2
