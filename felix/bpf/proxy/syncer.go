@@ -37,10 +37,12 @@ import (
 	"github.com/projectcalico/calico/felix/ip"
 )
 
-var podNPIPStr = "255.255.255.255"
-var podNPIP = net.ParseIP(podNPIPStr)
-var podNPIPV6Str = "ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff"
-var podNPIPV6 = net.ParseIP(podNPIPV6Str)
+var (
+	podNPIPStr   = "255.255.255.255"
+	podNPIP      = net.ParseIP(podNPIPStr)
+	podNPIPV6Str = "ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff"
+	podNPIPV6    = net.ParseIP(podNPIPV6Str)
+)
 
 // Service combines k8s service properties with the service annotations
 type Service interface {
@@ -216,7 +218,6 @@ func NewSyncer(family int, nodePortIPs []net.IP,
 	affmap maps.Map, rt Routes,
 	excludedCIDRs *ip.CIDRTrie,
 ) (*Syncer, error) {
-
 	s := &Syncer{
 		ipFamily:      family,
 		bpfAff:        affmap,
@@ -448,7 +449,8 @@ func (s *Syncer) addActiveEps(id uint32, svc Service, eps []k8sp.Endpoint) {
 }
 
 func (s *Syncer) applyExpandedNP(sname k8sp.ServicePortName, sinfo k8sp.ServicePort,
-	eps []k8sp.Endpoint, node ip.Addr, nport int) error {
+	eps []k8sp.Endpoint, node ip.Addr, nport int,
+) error {
 	skey := getSvcKey(sname, getSvcKeyExtra(svcTypeNodePortRemote, node.AsNetIP()))
 	si := serviceInfoFromK8sServicePort(sinfo)
 	si.clusterIP = node.AsNetIP()
@@ -469,8 +471,8 @@ type expandMiss struct {
 }
 
 func (s *Syncer) expandAndApplyNodePorts(sname k8sp.ServicePortName, sinfo k8sp.ServicePort,
-	eps []k8sp.Endpoint, nport int, rtLookup func(addr ip.Addr) (routes.ValueInterface, bool)) *expandMiss {
-
+	eps []k8sp.Endpoint, nport int, rtLookup func(addr ip.Addr) (routes.ValueInterface, bool),
+) *expandMiss {
 	ipToEp, miss := s.expandNodePorts(sname, sinfo, eps, nport, rtLookup)
 
 	for node, neps := range ipToEp {
@@ -527,7 +529,6 @@ func (s *Syncer) applyDerived(
 	t svcType,
 	sinfo Service,
 ) error {
-
 	svc, ok := s.newSvcMap[getSvcKey(sname, "")]
 	if !ok {
 		// this should not happen
@@ -551,7 +552,7 @@ func (s *Syncer) applyDerived(
 		}
 	}
 
-	if sinfo.NodeLocalExternal() && local == 0 && strings.Contains(sname.Name, "-directpath") {
+	if sinfo.ExternalPolicyLocal() && local == 0 && strings.Contains(sname.Name, "-directpath") {
 		log.Debugf("LB Service %s not written due to no endpoints and directpath set", skey)
 		return nil
 	}
@@ -1225,8 +1226,8 @@ func (s *Syncer) cleanupSticky() error {
 
 // ConntrackFrontendHasBackend returns true if the given front-backend pair exists
 func (s *Syncer) ConntrackFrontendHasBackend(ip net.IP, port uint16,
-	backendIP net.IP, backendPort uint16, proto uint8) (ret bool) {
-
+	backendIP net.IP, backendPort uint16, proto uint8,
+) (ret bool) {
 	if log.GetLevel() >= log.DebugLevel {
 		defer func() {
 			log.WithField("ret", ret).Debug("ConntrackFrontendHasBackend")
@@ -1426,8 +1427,8 @@ type K8sServicePortOption func(interface{})
 
 // NewK8sServicePort creates a new k8s ServicePort
 func NewK8sServicePort(clusterIP net.IP, port int, proto v1.Protocol,
-	opts ...K8sServicePortOption) k8sp.ServicePort {
-
+	opts ...K8sServicePortOption,
+) k8sp.ServicePort {
 	x := &servicePort{
 		ServicePort: &serviceInfo{
 			clusterIP: clusterIP,
