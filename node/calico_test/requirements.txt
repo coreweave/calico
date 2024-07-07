@@ -7,3 +7,4 @@ simplejson==3.13.2
 deepdiff==3.3.0
 kubernetes
 pytest
+certifi>=2024.7.4 # not directly required, pinned by Snyk to avoid a vulnerability
